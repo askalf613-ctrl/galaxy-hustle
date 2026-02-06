@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>HUSTLE v19.2 - SECRET PASS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        /* ŞİFRE EKRANI STİLLERİ */
+        #login-screen {
+            position: fixed; inset: 0; background: #050505; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        }
+        .login-box {
+            width: 100%; max-width: 300px; text-align: center;
+        }
+        .login-box h2 { color: #00f2ff; margin-bottom: 20px; font-size: 18px; }
+        .login-input {
+            width: 100%; padding: 15px; background: #111; border: 2px solid #222;
+            color: white; border-radius: 10px; font-family: 'Orbitron'; margin-bottom: 15px; text-align: center;
+        }
+        .login-btn {
+            width: 100%; padding: 15px; background: #00f2ff; color: black;
+            border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron';
+        }
+        
+        /* OYUN STİLLERİ (ÖNCEKİYLE AYNI) */
+        :root { --neon: #00f2ff; --bg: #050505; --gold: #ffcc00; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Orbitron', sans-serif; overflow: hidden; }
+        #game-content { display: none; height: 100vh; flex-direction: column; }
+        
+        .top-bar { padding: 20px; text-align: center; border-bottom: 1px solid #222; }
+        #money { color: var(--gold); font-size: 24px; font-weight: 900; }
+        
+        .viewport { flex: 1; display: flex; align-items: center; justify-content: center; }
+        #main-btn {
+            width: 250px; height: 250px; border-radius: 50%;
+            background: #111 url('https://p16-va.lemon8cdn.com/obj/tos-alisg-v-a3e477-us/oEA6fAfeYQIdfIAnDAnf9eEBeQAggfCAnEIBE9') center/cover;
+            border: 5px solid white; box-shadow: 0 0 30px rgba(0,242,255,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>GİZLİ ERİŞİM</h2>
+            <input type="password" id="pass-input" class="login-input" placeholder="Şifreyi Girin...">
+            <button class="login-btn" onclick="checkPass()">GİRİŞ YAP</button>
+        </div>
+    </div>
+
+    <div id="game-content">
+        <div class="top-bar">
+            <div id="money">0 ₺</div>
+        </div>
+        <div class="viewport">
+            <div id="main-btn" onclick="handleTap()"></div>
+        </div>
+    </div>
+
+    <script>
+        const DOGRU_SIFRE = "kral oyun yapımcısı";
+        let cash = 0;
+
+        function checkPass() {
+            const input = document.getElementById('pass-input').value;
+            if (input === DOGRU_SIFRE) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('game-content').style.display = 'flex';
+                // Kayıtlı parayı yükle
+                const saved = localStorage.getItem('hustle_v192');
+                if(saved) { cash = JSON.parse(saved).cash; update(); }
+            } else {
+                alert("Hatalı Şifre! Erişim Reddedildi.");
+                document.getElementById('pass-input').value = "";
+            }
+        }
+
+        function handleTap() {
+            cash += 1;
+            update();
+        }
+
+        function update() {
+            document.getElementById('money').innerText = Math.floor(cash).toLocaleString() + " ₺";
+            localStorage.setItem('hustle_v192', JSON.stringify({cash: cash}));
+        }
+    </script>
+</body>
+</html>
