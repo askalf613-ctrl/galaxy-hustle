@@ -3,105 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>THE SYNDICATE: OMEGA</title>
+    <title>NEBULA OVERLORD v28</title>
     <style>
-        :root { --n: #00ff88; --rb: #9d00ff; --bg: #030303; --g: #ffd700; --w: #ffffff; }
+        :root { --p: #00f2ff; --s: #7000ff; --bg: #020205; --w: #ffffff; --acc: #ff0055; }
         * { -webkit-tap-highlight-color: transparent; outline: none; user-select: none; box-sizing: border-box; }
         
-        body { background: var(--bg); color: var(--w); font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        body { background: var(--bg); color: var(--w); font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* Arka Plan Animasyonu */
-        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 50%, #00ff8811 0%, transparent 70%); animation: pulseBg 8s infinite alternate; }
-        @keyframes pulseBg { from { opacity: 0.3; transform: scale(1); } to { opacity: 0.7; transform: scale(1.2); } }
+        /* Kozmik Arka Plan */
+        .stars { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #101025 0%, #020205 100%); }
+        .nebula { position: absolute; width: 400px; height: 400px; background: var(--s); filter: blur(150px); opacity: 0.15; border-radius: 50%; animation: float 20s infinite alternate; }
+        @keyframes float { from { transform: translate(-50%, -50%); } to { transform: translate(50%, 50%); } }
 
-        /* Ana Ekran Tasarımı */
-        .header { text-align: center; margin-top: 40px; }
-        .m-val { font-size: 4.5rem; font-weight: 900; background: linear-gradient(to bottom, var(--n), #008855); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(0,255,136,0.3)); letter-spacing: -3px; }
-        .sub-val { color: #555; font-weight: bold; font-size: 14px; text-transform: uppercase; margin-top: -10px; }
+        /* Üst Panel (Borsa Stili) */
+        .h-panel { width: 100%; padding: 30px; text-align: center; background: linear-gradient(to bottom, rgba(0,242,255,0.05), transparent); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #money { font-size: 4.5rem; font-weight: 900; color: var(--p); text-shadow: 0 0 30px rgba(0,242,255,0.5); letter-spacing: -3px; }
+        .income { font-size: 12px; letter-spacing: 2px; color: #555; font-weight: bold; margin-top: -5px; }
 
-        /* Enerji ve Overdrive */
-        .od-box { width: 250px; height: 6px; background: #111; border-radius: 10px; margin: 20px auto; overflow: hidden; border: 1px solid #222; }
-        #od-bar { width: 0%; height: 100%; background: var(--n); box-shadow: 0 0 10px var(--n); transition: 0.2s; }
+        /* ENERJİ ÇEKİRDEĞİ (Gelişmiş) */
+        .core-zone { position: relative; margin: 40px 0; width: 280px; height: 280px; display: flex; justify-content: center; align-items: center; }
+        .ring { position: absolute; inset: 0; border: 2px solid var(--p); border-radius: 50%; opacity: 0.3; animation: pulse 2s infinite; }
+        .ring-inner { position: absolute; inset: 20px; border: 1px solid var(--s); border-radius: 50%; animation: spin 8s linear infinite; }
+        .main-core { width: 180px; height: 180px; background: radial-gradient(circle, #1a1a2e, #000); border: 4px solid #333; border-radius: 50%; z-index: 10; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 80px; transition: 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 0 50px rgba(0,0,0,1); }
+        .main-core:active { transform: scale(0.88); border-color: var(--p); box-shadow: 0 0 80px rgba(0,242,255,0.4); }
 
-        /* Ana Buton (The Core) */
-        .core-wrap { position: relative; margin: 20px 0; }
-        .core { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #1a1a1a, #000); border: 4px solid #222; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; z-index: 5; transition: 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .core::after { content: '💼'; font-size: 80px; }
-        .core:active { transform: scale(0.85); border-color: var(--n); box-shadow: 0 0 50px rgba(0,255,136,0.4); }
-        
-        /* Floating Text Efekti */
-        .f-text { position: absolute; color: var(--n); font-weight: 1000; animation: floatUp 0.8s forwards; pointer-events: none; }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.3); opacity: 0; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Alt Navigasyon */
-        .nav { position: fixed; bottom: 30px; display: flex; gap: 15px; background: rgba(255,255,255,0.03); padding: 10px 20px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        .nav-i { width: 50px; height: 50px; border-radius: 50%; background: #111; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 1px solid #333; font-size: 20px; transition: 0.3s; }
-        .nav-i:active { transform: scale(0.8); background: var(--n); color: #000; }
+        /* Tıklama Efekti */
+        .tık-val { position: absolute; color: var(--p); font-weight: 900; font-size: 28px; pointer-events: none; animation: fly 0.8s ease-out forwards; z-index: 100; text-shadow: 0 0 10px var(--p); }
+        @keyframes fly { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-150px) scale(1.5) rotate(15deg); } }
 
-        /* Modern Paneller */
-        .pnl { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; padding: 20px; backdrop-filter: blur(20px); }
-        .pnl-h { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        .close-p { font-size: 30px; color: var(--accent); cursor: pointer; }
+        /* Menü Navigasyonu */
+        .nav-bar { position: fixed; bottom: 40px; display: flex; gap: 15px; z-index: 1000; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 30px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        .n-btn { width: 60px; height: 60px; border-radius: 20px; border: none; background: #111; color: white; font-size: 22px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .n-btn:active { transform: scale(0.8); background: var(--p); color: #000; }
 
-        /* Kartlar */
-        .list { overflow-y: auto; flex: 1; margin-top: 20px; }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; transition: 0.3s; }
-        .card:active { background: rgba(0,255,136,0.05); border-color: var(--n); }
-        .c-tit { font-weight: 800; font-size: 16px; margin: 0; }
-        .c-sub { color: #666; font-size: 12px; margin-top: 4px; }
-        .buy { background: var(--n); color: #000; border: none; padding: 12px 20px; border-radius: 14px; font-weight: 900; }
+        /* Paneller */
+        .pnl { position: fixed; inset: 0; background: rgba(2,2,5,0.98); z-index: 2000; display: none; flex-direction: column; padding: 40px 25px; backdrop-filter: blur(40px); border-top: 2px solid var(--p); }
+        .pnl-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 22px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; transition: 0.2s; }
+        .card:active { background: rgba(0,242,255,0.05); border-color: var(--p); }
+        .buy { background: var(--p); color: #000; border: none; padding: 14px 24px; border-radius: 18px; font-weight: 900; font-size: 14px; box-shadow: 0 5px 15px rgba(0,242,255,0.2); }
 
-        #crisis-ov { position: fixed; inset: 0; background: #900; z-index: 9000; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #crisis { position: fixed; inset: 0; background: rgba(255,0,0,0.9); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="stars"></div>
+    <div class="nebula"></div>
 
-    <div id="crisis-ov">
-        <h1 style="font-size: 60px;">FBI BASKINI!</h1>
-        <p>Varlıklarına el konulmadan önce rüşveti öde!</p>
-        <button onclick="fC()" style="padding:25px 60px; border-radius:20px; border:none; background:white; font-weight:900; font-size:20px; color:red;">KORUMAYI ÇAĞIR</button>
+    <div id="crisis">
+        <h1 style="font-size: 60px; margin:0;">🚨 SİSTEM ÇÖKTÜ!</h1>
+        <p>Hackerlar saldırıyor, acil müdahale et!</p>
+        <button onclick="fix()" style="padding:25px 60px; border-radius:50px; border:none; background:white; font-weight:900; color:red; font-size:22px;">SİSTEMİ ONAR</button>
     </div>
 
-    <div class="header">
-        <div class="m-val" id="m">0 ₺</div>
-        <div class="sub-val" id="s-i">Gelir: 0 ₺/sn</div>
+    <div class="h-panel">
+        <div id="money">0 ₺</div>
+        <div class="income" id="inc-ui">GELİR: 0 ₺/SN</div>
     </div>
 
-    <div class="od-box"><div id="od-bar"></div></div>
-
-    <div class="core-wrap">
-        <div class="core" id="core" onclick="t(event)"></div>
+    <div class="core-zone">
+        <div class="ring"></div>
+        <div class="ring-inner"></div>
+        <div class="main-core" onclick="tıkla(event)">⚡</div>
     </div>
 
-    <div class="nav">
-        <div class="nav-i" onclick="oP('mkt')">🛒</div>
-        <div class="nav-i" onclick="oP('ach')">🏆</div>
-        <div class="nav-i" onclick="oP('set')">⚙️</div>
+    <div class="nav-bar">
+        <button class="n-btn" onclick="pAç('mkt')">🛒</button>
+        <button class="n-btn" onclick="pAç('ach')">🏆</button>
+        <button class="n-btn" onclick="pAç('set')">⚙️</button>
     </div>
 
     <div id="p-mkt" class="pnl">
-        <div class="pnl-h"><h2>SYN MARKET</h2><span class="close-p" onclick="cP()">×</span></div>
-        <div id="rb-card" class="card" style="border:1px solid var(--rb);">
-            <div><p class="c-tit" style="color:var(--rb);">REBIRTH</p><small id="rb-lvl">Lvl 0</small></div>
-            <button class="buy" id="rb-b" onclick="doRb()">0 ₺</button>
+        <div class="pnl-h"><h2 style="color:var(--p); margin:0;">KOZMİK MARKET</h2><b onclick="pKapat()" style="font-size:35px;">×</b></div>
+        <div class="card" style="border:1px solid var(--s);">
+            <div><b style="color:var(--s)">YENİDEN DOĞUŞ</b><br><small id="rb-l">Seviye 0</small></div>
+            <button class="buy" id="rb-btn" onclick="doRb()" style="background:var(--s); color:white;">0 ₺</button>
         </div>
-        <div class="list" id="s-l"></div>
-    </div>
-
-    <div id="p-ach" class="pnl">
-        <div class="pnl-h"><h2>BAŞARIMLAR</h2><span class="close-p" onclick="cP()">×</span></div>
-        <div class="list" id="a-l"></div>
+        <div id="shop-list" style="overflow-y:auto; flex:1;"></div>
     </div>
 
     <div id="p-set" class="pnl">
-        <div class="pnl-h"><h2>SİSTEM</h2><span class="close-p" onclick="cP()">×</span></div>
-        <div class="list">
-            <div class="card"><span>Toplam Tık</span> <b id="st-t">0</b></div>
-            <div class="card"><span>Zaman</span> <b id="st-p">0</b></div>
-            <button onclick="rst()" style="width:100%; padding:20px; background:red; color:white; border:none; border-radius:15px; font-weight:bold; margin-top:20px;">SİSTEMİ SIFIRLA</button>
-        </div>
+        <div class="pnl-h"><h2>SİSTEM VERİLERİ</h2><b onclick="pKapat()" style="font-size:35px;">×</b></div>
+        <div class="card"><span>Toplam Enerji:</span> <b id="st-tc">0</b></div>
+        <div class="card"><span>Aktif Süre:</span> <b id="st-pt">0</b></div>
+        <button onclick="rst()" style="width:100%; padding:22px; background:var(--acc); color:white; border:none; border-radius:20px; font-weight:bold; margin-top:30px; font-size:18px;">TÜM VERİLERİ SİL</button>
     </div>
 
     <script>
@@ -111,108 +100,91 @@
         let rb = parseInt(localStorage.getItem('rb')) || 0;
         let tc = parseInt(localStorage.getItem('tc')) || 0;
         let pt = parseInt(localStorage.getItem('pt')) || 0;
-        let unl = JSON.parse(localStorage.getItem('unl')) || [];
-        let od = false, en = 0, cri = false, last = Date.now();
+        let last = Date.now(), cri = false;
 
         const its = [
-            {n:"Sokak Ekibi", b:20, p:1, t:"c"},
-            {n:"Yasadışı Bahis", b:100, p:5, t:"a"},
-            {n:"Silah Sevkiyatı", b:1000, p:60, t:"a"},
-            {n:"Teknoloji Şirketi", b:10000, p:700, t:"a"},
-            {n:"Zaman Makinesi", b:1000000, p:100000, t:"a"},
-            {n:"Yıldız Sömürgesi", b:50000000, p:6000000, t:"a"}
+            {n:"Enerji Paneli", b:30, p:1, t:"c"},
+            {n:"Siber Maden", b:150, p:8, t:"a"},
+            {n:"Kozmik İstasyon", b:1200, p:80, t:"a"},
+            {n:"Yapay Zeka", b:10000, p:900, t:"a"},
+            {n:"Zaman Kapısı", b:80000, p:6000, t:"a"},
+            {n:"Galaksi Reisi", b:1000000, p:90000, t:"a"}
         ];
 
-        function t(e) {
+        function tıkla(e) {
             if(cri) return;
             last = Date.now();
-            let val = pc * (1+rb) * (od ? 10 : 1);
+            let val = pc * (1+rb);
             m += val; tc++;
             
-            // Floating Text
-            const fl = document.createElement('div');
-            fl.className = 'f-text';
-            fl.innerText = `+${Math.floor(val)}₺`;
-            fl.style.left = e.clientX + 'px';
-            fl.style.top = e.clientY + 'px';
-            document.body.appendChild(fl);
-            setTimeout(() => fl.remove(), 800);
+            const p = document.createElement('div');
+            p.className = 'tık-val';
+            p.innerText = `+${Math.floor(val)}₺`;
+            p.style.left = e.clientX + 'px';
+            p.style.top = e.clientY + 'px';
+            document.body.appendChild(p);
+            setTimeout(()=>p.remove(), 800);
 
-            if(!od) { en += 2; if(en >= 100) startOD(); }
-            u(); sv();
+            update(); save();
         }
 
-        function startOD() {
-            od = true; en = 100;
-            document.getElementById('od-bar').style.background = 'var(--g)';
-            setTimeout(() => { od = false; en = 0; document.getElementById('od-bar').style.background = 'var(--n)'; }, 10000);
+        function pAç(id) { 
+            document.querySelectorAll('.pnl').forEach(p=>p.style.display='none');
+            document.getElementById('p-'+id).style.display='flex';
+            if(id=='mkt') renderShop();
         }
+        function pKapat() { document.querySelectorAll('.pnl').forEach(p=>p.style.display='none'); }
 
-        function oP(id) { document.querySelectorAll('.pnl').forEach(p=>p.style.display='none'); document.getElementById('p-'+id).style.display='flex'; if(id=='mkt') rS(); if(id=='ach') rA(); }
-        function cP() { document.querySelectorAll('.pnl').forEach(p=>p.style.display='none'); }
-
-        function rS() {
+        function renderShop() {
             let h = "";
             its.forEach((it, i) => {
                 let l = parseInt(localStorage.getItem('l'+i)) || 0;
-                let c = Math.floor(it.b * Math.pow(1.7, l));
-                h += `<div class="card"><div><p class="c-tit">${it.n}</p><p class="c-sub">+${it.p} ${it.t=='c'?'Tık':'Sn'}</p></div><button class="buy" onclick="buy(${i})">${c.toLocaleString()}₺</button></div>`;
+                let c = Math.floor(it.b * Math.pow(1.65, l));
+                h += `<div class="card"><div><b>${it.n}</b><br><small>+${it.p} ${it.t=='c'?'Tık':'Sn'}</small></div><button class="buy" onclick="buy(${i})">${c.toLocaleString()}₺</button></div>`;
             });
-            document.getElementById('s-l').innerHTML = h;
+            document.getElementById('shop-list').innerHTML = h;
         }
 
         function buy(i) {
             let l = parseInt(localStorage.getItem('l'+i)) || 0;
-            let c = Math.floor(its[i].b * Math.pow(1.7, l));
+            let c = Math.floor(its[i].b * Math.pow(1.65, l));
             if(m >= c) {
                 m -= c; localStorage.setItem('l'+i, l+1);
                 if(its[i].t=='c') pc += its[i].p; else ai += its[i].p;
-                rS(); u(); sv();
+                renderShop(); update(); save();
             }
         }
 
         function doRb() {
-            let c = 25000 * (rb+1);
-            if(m >= c) { rb++; m=0; pc=1; ai=0; its.forEach((_,i)=>localStorage.removeItem('l'+i)); sv(); location.reload(); }
+            let c = 15000 * (rb+1);
+            if(m >= c) { rb++; m=0; pc=1; ai=0; its.forEach((_,i)=>localStorage.removeItem('l'+i)); save(); location.reload(); }
         }
 
-        function rA() {
-            let h = "";
-            const acs = [
-                {n:"Büyük OC", d:"72 Saat Aktiflik", c: pt >= 259200},
-                {n:"Baron", d:"100M ₺ Nakit", c: m >= 100000000},
-                {n:"Efsane", d:"10 Rebirth", c: rb >= 10}
-            ];
-            acs.forEach(a => h += `<div class="card" style="opacity:${a.c?1:0.3}"><div><p class="c-tit">${a.n}</p><p class="c-sub">${a.d}</p></div><b>${a.c?'✅':'🔒'}</b></div>`);
-            document.getElementById('a-l').innerHTML = h;
-        }
-
-        function fC() { cri = false; document.getElementById('crisis-ov').style.display='none'; last=Date.now(); }
+        function fix() { cri = false; document.getElementById('crisis').style.display='none'; last=Date.now(); }
 
         setInterval(() => {
-            if(!cri) { m += (ai * (1+rb)); pt++; if(en > 0 && !od) en -= 1; }
-            if(Date.now() - last > 120000 && !cri) { cri = true; document.getElementById('crisis-ov').style.display='flex'; }
-            u(); sv();
+            if(!cri) { m += (ai * (1+rb)); pt++; }
+            if(Date.now() - last > 180000 && !cri) { cri = true; document.getElementById('crisis').style.display='flex'; }
+            update(); save();
         }, 1000);
 
-        function u() {
-            document.getElementById('m').innerText = Math.floor(m).toLocaleString() + " ₺";
-            document.getElementById('s-i').innerText = `Gelir: ${Math.floor(ai*(1+rb)).toLocaleString()} ₺/sn`;
-            document.getElementById('od-bar').style.width = en + "%";
-            document.getElementById('st-t').innerText = tc;
-            document.getElementById('rb-lvl').innerText = "Seviye " + rb;
-            document.getElementById('rb-b').innerText = (25000*(rb+1)).toLocaleString() + " ₺";
-            document.getElementById('rb-b').disabled = m < (25000*(rb+1));
+        function update() {
+            document.getElementById('money').innerText = Math.floor(m).toLocaleString() + " ₺";
+            document.getElementById('inc-ui').innerText = `GELİR: ${Math.floor(ai*(1+rb)).toLocaleString()} ₺/SN`;
+            document.getElementById('st-tc').innerText = tc.toLocaleString();
+            document.getElementById('rb-l').innerText = "Seviye " + rb;
+            document.getElementById('rb-btn').innerText = (15000*(rb+1)).toLocaleString() + " ₺";
+            document.getElementById('rb-btn').disabled = m < (15000*(rb+1));
             let h = Math.floor(pt/3600); let min = Math.floor((pt%3600)/60);
-            document.getElementById('st-p').innerText = `${h}s ${min}d`;
+            document.getElementById('st-pt').innerText = `${h}s ${min}d`;
         }
 
-        function sv() {
+        function save() {
             localStorage.setItem('m', m); localStorage.setItem('pc', pc);
             localStorage.setItem('ai', ai); localStorage.setItem('rb', rb);
             localStorage.setItem('tc', tc); localStorage.setItem('pt', pt);
         }
-        function rst() { if(confirm("TÜM İMPARATORLUK SİLİNSİN Mİ?")) { localStorage.clear(); location.reload(); } }
+        function rst() { if(confirm("EVRENİ SIFIRLAMAK İSTEDİĞİNE EMİN MİSİN?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
