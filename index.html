@@ -2,90 +2,266 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HUSTLE v19.2 - SECRET PASS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Galaxy Hustle: v20.0 Extreme</title>
     <style>
-        /* ŞİFRE EKRANI STİLLERİ */
-        #login-screen {
-            position: fixed; inset: 0; background: #050505; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        :root {
+            --neon-green: #00ff88;
+            --rebirth-purple: #9d00ff;
+            --bg-dark: #050505;
         }
-        .login-box {
-            width: 100%; max-width: 300px; text-align: center;
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+            color: white; font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0; overflow: hidden; height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
         }
-        .login-box h2 { color: #00f2ff; margin-bottom: 20px; font-size: 18px; }
-        .login-input {
-            width: 100%; padding: 15px; background: #111; border: 2px solid #222;
-            color: white; border-radius: 10px; font-family: 'Orbitron'; margin-bottom: 15px; text-align: center;
+
+        /* Giriş Ekranı */
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
         }
-        .login-btn {
-            width: 100%; padding: 15px; background: #00f2ff; color: black;
-            border: none; border-radius: 10px; font-weight: 900; font-family: 'Orbitron';
+
+        input {
+            padding: 15px; border-radius: 10px; border: 2px solid var(--neon-green);
+            background: #111; color: white; margin: 15px; text-align: center; width: 80%; max-width: 300px;
         }
-        
-        /* OYUN STİLLERİ (ÖNCEKİYLE AYNI) */
-        :root { --neon: #00f2ff; --bg: #050505; --gold: #ffcc00; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Orbitron', sans-serif; overflow: hidden; }
-        #game-content { display: none; height: 100vh; flex-direction: column; }
-        
-        .top-bar { padding: 20px; text-align: center; border-bottom: 1px solid #222; }
-        #money { color: var(--gold); font-size: 24px; font-weight: 900; }
-        
-        .viewport { flex: 1; display: flex; align-items: center; justify-content: center; }
-        #main-btn {
-            width: 250px; height: 250px; border-radius: 50%;
-            background: #111 url('https://p16-va.lemon8cdn.com/obj/tos-alisg-v-a3e477-us/oEA6fAfeYQIdfIAnDAnf9eEBeQAggfCAnEIBE9') center/cover;
-            border: 5px solid white; box-shadow: 0 0 30px rgba(0,242,255,0.3);
+
+        /* Ana Ekran */
+        .money-display {
+            font-size: 3.5rem; font-weight: bold; color: var(--neon-green);
+            margin-top: 40px; text-shadow: 0 0 15px rgba(0,255,136,0.6);
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.05); padding: 10px 20px;
+            border-radius: 20px; font-size: 0.9rem; margin-top: 10px;
+        }
+
+        /* Ana Tıklama Butonu */
+        .main-btn {
+            width: 220px; height: 220px; border-radius: 50%;
+            background: linear-gradient(145deg, #00ff88, #008855);
+            box-shadow: 0 0 40px rgba(0,255,136,0.2);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 80px; cursor: pointer; border: 8px solid rgba(255,255,255,0.1);
+            margin: 40px auto; transition: transform 0.05s;
+            user-select: none; -webkit-tap-highlight-color: transparent;
+        }
+
+        .main-btn:active { transform: scale(0.92); }
+
+        /* Neon Market Paneli */
+        #shop-panel {
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 75%;
+            background: rgba(10, 10, 15, 0.98); border-top: 4px solid var(--neon-green);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 2000; overflow-y: auto; padding-top: 20px;
+            box-shadow: 0 -10px 30px rgba(0,255,136,0.1);
+        }
+
+        #shop-panel.open { bottom: 0; }
+
+        .toggle-shop-btn {
+            position: fixed; bottom: 25px; width: 160px;
+            padding: 15px; border-radius: 30px; background: var(--neon-green);
+            color: #000; font-weight: bold; border: none; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,255,136,0.4); z-index: 1001;
+        }
+
+        /* Geliştirmeler */
+        .upgrade-card {
+            background: rgba(255,255,255,0.03); margin: 10px 15px; padding: 15px;
+            border-radius: 15px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid #222;
+        }
+
+        .upgrade-info { text-align: left; }
+        .upgrade-info b { color: var(--neon-green); font-size: 1.1rem; }
+        .upgrade-info p { margin: 5px 0 0; font-size: 0.8rem; color: #aaa; }
+
+        .buy-btn {
+            background: #222; color: var(--neon-green); border: 1px solid var(--neon-green);
+            padding: 10px 15px; border-radius: 8px; font-weight: bold; min-width: 80px;
+        }
+
+        .buy-btn:enabled { background: var(--neon-green); color: #000; }
+
+        /* Rebirth Bölümü */
+        .rebirth-zone {
+            background: linear-gradient(45deg, #440066, #110022);
+            margin: 15px; padding: 20px; border-radius: 20px; border: 1px solid var(--rebirth-purple);
         }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h2>GİZLİ ERİŞİM</h2>
-            <input type="password" id="pass-input" class="login-input" placeholder="Şifreyi Girin...">
-            <button class="login-btn" onclick="checkPass()">GİRİŞ YAP</button>
-        </div>
+    <div id="auth-screen">
+        <h1 style="color: var(--neon-green); letter-spacing: 5px;">GALAXY HUSTLE</h1>
+        <p style="color: #666;">v20.0 Extreme Edition</p>
+        <input type="password" id="pass" placeholder="ERİŞİM ŞİFRESİ">
+        <button onclick="checkPass()" style="padding: 12px 30px; background: var(--neon-green); border: none; border-radius: 8px; font-weight: bold;">SİSTEME GİR</button>
     </div>
 
-    <div id="game-content">
-        <div class="top-bar">
-            <div id="money">0 ₺</div>
+    <div id="game-ui" style="display:none; width: 100%;">
+        <div class="money-display" id="money">0 ₺</div>
+        
+        <div class="stats-bar">
+            Tık: <span id="click-val">1</span>₺ | Oto: <span id="auto-val">0</span>₺/sn
         </div>
-        <div class="viewport">
-            <div id="main-btn" onclick="handleTap()"></div>
+        
+        <div id="rb-status" style="margin-top: 10px; color: var(--rebirth-purple); font-weight: bold; font-size: 0.8rem;">
+            REBIRTH SEVİYESİ: 0
         </div>
+
+        <div class="main-btn" onclick="handleButtonClick()">💵</div>
+
+        <button class="toggle-shop-btn" id="shop-toggle" onclick="toggleShop()">MARKETİ AÇ</button>
+
+        <div id="shop-panel">
+            <div style="padding: 10px; border-bottom: 1px solid #222;">
+                <button onclick="toggleShop()" style="background:none; border:none; color:#ff4444; font-weight:bold;">[ KAPAT ]</button>
+            </div>
+
+            <div class="rebirth-zone">
+                <h3 style="margin:0; color: #d400ff;">YENİDEN DOĞUŞ (REBIRTH)</h3>
+                <p style="font-size: 0.7rem; color: #ccc;">Her şey sıfırlanır, kazancın kalıcı olarak katlanır!</p>
+                <button class="buy-btn" id="rb-btn" onclick="doRebirth()" style="width: 100%; margin-top: 10px; border-color: #d400ff; color: #d400ff;">
+                    REBIRTH YAP (15,000 ₺)
+                </button>
+            </div>
+
+            <div id="upgrades-list">
+                </div>
+            
+            <div style="height: 100px;"></div> </div>
     </div>
 
     <script>
-        const DOGRU_SIFRE = "kral oyun yapımcısı";
-        let cash = 0;
+        // Veriler
+        let money = parseFloat(localStorage.getItem('gh_money')) || 0;
+        let perClick = parseFloat(localStorage.getItem('gh_perClick')) || 1;
+        let autoIncome = parseFloat(localStorage.getItem('gh_autoIncome')) || 0;
+        let rebirthLevel = parseInt(localStorage.getItem('gh_rebirth')) || 0;
+
+        const upgrades = [
+            { name: "Küçük Rüşvet", baseCost: 15, power: 1, type: "click", desc: "Tıklama gücünü artırır." },
+            { name: "Sokak Satıcısı", baseCost: 60, power: 2, type: "auto", desc: "Saniyede otomatik para." },
+            { name: "Yeraltı Kumarhanesi", baseCost: 300, power: 12, type: "auto", desc: "Ciddi bir gelir kaynağı." },
+            { name: "Gece Kulübü", baseCost: 1200, power: 45, type: "auto", desc: "Şehrin gözdesi." },
+            { name: "İthalat Baronu", baseCost: 5000, power: 180, type: "auto", desc: "Gümrükler senin elinde." },
+            { name: "Hükümet İhalesi", baseCost: 25000, power: 900, type: "auto", desc: "Devletin parası senin cebine." }
+        ];
 
         function checkPass() {
-            const input = document.getElementById('pass-input').value;
-            if (input === DOGRU_SIFRE) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('game-content').style.display = 'flex';
-                // Kayıtlı parayı yükle
-                const saved = localStorage.getItem('hustle_v192');
-                if(saved) { cash = JSON.parse(saved).cash; update(); }
+            if(document.getElementById('pass').value === 'kral oyun yapımcısı') {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('game-ui').style.display = 'block';
+                initShop();
+                updateUI();
             } else {
-                alert("Hatalı Şifre! Erişim Reddedildi.");
-                document.getElementById('pass-input').value = "";
+                alert("Şifre Yanlış, Kral!");
             }
         }
 
-        function handleTap() {
-            cash += 1;
-            update();
+        function handleButtonClick() {
+            let mult = 1 + rebirthLevel;
+            money += perClick * mult;
+            updateUI();
+            save();
         }
 
-        function update() {
-            document.getElementById('money').innerText = Math.floor(cash).toLocaleString() + " ₺";
-            localStorage.setItem('hustle_v192', JSON.stringify({cash: cash}));
+        function toggleShop() {
+            const panel = document.getElementById('shop-panel');
+            const btn = document.getElementById('shop-toggle');
+            panel.classList.toggle('open');
+            btn.innerText = panel.classList.contains('open') ? "OYUNA DÖN" : "MARKETİ AÇ";
         }
+
+        function initShop() {
+            const list = document.getElementById('upgrades-list');
+            list.innerHTML = "";
+            upgrades.forEach((u, i) => {
+                let cost = Math.floor(u.baseCost * Math.pow(1.4, (localStorage.getItem('upg_'+i) || 0)));
+                list.innerHTML += `
+                    <div class="upgrade-card">
+                        <div class="upgrade-info">
+                            <b>${u.name}</b>
+                            <p>${u.desc}<br>Güç: +${u.power}</p>
+                        </div>
+                        <button class="buy-btn" id="u-btn-${i}" onclick="buyUpgrade(${i})">${cost} ₺</button>
+                    </div>
+                `;
+            });
+        }
+
+        function buyUpgrade(i) {
+            let u = upgrades[i];
+            let level = parseInt(localStorage.getItem('upg_'+i) || 0);
+            let cost = Math.floor(u.baseCost * Math.pow(1.4, level));
+
+            if(money >= cost) {
+                money -= cost;
+                localStorage.setItem('upg_'+i, level + 1);
+                if(u.type === "click") perClick += u.power;
+                else autoIncome += u.power;
+                initShop();
+                updateUI();
+                save();
+            }
+        }
+
+        function doRebirth() {
+            let rbCost = 15000 * (rebirthLevel + 1);
+            if(money >= rbCost) {
+                if(confirm("Tüm gelişimin sıfırlanacak ama KAZANCIN KATLANACAK. Kabul mü?")) {
+                    rebirthLevel++;
+                    money = 0; perClick = 1; autoIncome = 0;
+                    upgrades.forEach((_, i) => localStorage.removeItem('upg_'+i));
+                    save();
+                    location.reload();
+                }
+            } else {
+                alert("Yeterli para yok! Gereken: " + rbCost + " ₺");
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('money').innerText = Math.floor(money).toLocaleString() + " ₺";
+            document.getElementById('click-val').innerText = perClick;
+            document.getElementById('auto-val').innerText = autoIncome;
+            document.getElementById('rb-status').innerText = "REBIRTH SEVİYESİ: " + rebirthLevel;
+            
+            let rbCost = 15000 * (rebirthLevel + 1);
+            document.getElementById('rb-btn').innerText = `REBIRTH YAP (${rbCost.toLocaleString()} ₺)`;
+            document.getElementById('rb-btn').disabled = money < rbCost;
+
+            upgrades.forEach((u, i) => {
+                let level = parseInt(localStorage.getItem('upg_'+i) || 0);
+                let cost = Math.floor(u.baseCost * Math.pow(1.4, level));
+                let btn = document.getElementById('u-btn-'+i);
+                if(btn) btn.disabled = money < cost;
+            });
+        }
+
+        function save() {
+            localStorage.setItem('gh_money', money);
+            localStorage.setItem('gh_perClick', perClick);
+            localStorage.setItem('gh_autoIncome', autoIncome);
+            localStorage.setItem('gh_rebirth', rebirthLevel);
+        }
+
+        // Otomatik Kazanç Döngüsü
+        setInterval(() => {
+            let mult = 1 + rebirthLevel;
+            money += (autoIncome * mult);
+            updateUI();
+            save();
+        }, 1000);
     </script>
 </body>
 </html>
